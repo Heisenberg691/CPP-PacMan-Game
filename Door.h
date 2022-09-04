@@ -1,5 +1,6 @@
-#ifndef DOOR_H
-#define DOOR_H
+// Copyright © Veselin Dafchev 2022 All Rights Reserved.
+#pragma once
+
 #include <SFML/Graphics.hpp>
 #include "Entity.h"
 #include "Globals.h"
@@ -16,4 +17,3 @@ private:
 	sf::Sprite* m_shape;
 };
 
-#endif

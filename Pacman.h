@@ -1,3 +1,5 @@
+// Copyright © Veselin Dafchev 2022 All Rights Reserved.
+#pragma once
 #include "Entity.h"
 #include "Globals.h"
 
@@ -19,7 +21,7 @@ public:
 	void SetTexture(sf::Texture* texture);
 	void Move();
 	void UpdateAnim();
-	unsigned int GetAnimByDirection(DIRECTION dir);
+	uint32_t GetAnimByDirection(DIRECTION dir);
 	sf::Sprite* Shape();
 	void CheckInteraction();
 	void SetCanMove(bool canMove);
@@ -30,8 +32,8 @@ private:
 	sf::Sprite* m_shape;
 	bool m_isDead;
 	bool m_isMoving;
-	unsigned int m_animFrame;
-	unsigned int m_animFrameNum;
+	uint32_t m_animFrame;
+	uint32_t m_animFrameNum;
 	sf::RenderWindow* m_screen;
 	sf::Clock m_deltaT;
 	Game* m_gameInstance;

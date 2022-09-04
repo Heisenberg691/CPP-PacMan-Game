@@ -1,11 +1,10 @@
-#include "Pacman.h"
-#include "Utils.h"
 #include "Game.h"
 #include <iostream>
+#include "Utils.h"
 
 Pacman::Pacman(Game* gameInstance)
 {
-	m_dir = DIRECTION::UP();
+	m_dir = DIRECTION(0);
 	m_isDead = false;
     m_animFrameNum = 6;
     sf::Texture texture;
@@ -70,17 +69,17 @@ void Pacman::Move()
     float newY = currentPos.y + (movement.y * 2);
     
 
-    if (!m_gameInstance->m_map->HasCollisionAtCoords(newX, newY)) {
+    if (!m_gameInstance->GetMap().HasCollisionAtCoords(newX, newY)) {
         float x = m_shape->getGlobalBounds().left;
         float y = m_shape->getGlobalBounds().top;
         if (x <= 0) {
-            newX = m_screen->getSize().x-50;
+            newX = float(m_screen->getSize().x - 50);
         }
         else if (x >= m_screen->getSize().x) {
             newX = 10;
         }
         else if (y < 0) {
-            newY = m_screen->getSize().y-50;
+            newY = float(m_screen->getSize().y - 50);
         }
         else if (y > m_screen->getSize().y) {
             newY = 10;
@@ -89,33 +88,33 @@ void Pacman::Move()
     }
     else {
      
-        unsigned int CheckDist = 20;
+        uint32_t CheckDist = 20;
         if (m_dir == DIRECTION::RIGHT || m_dir == DIRECTION::LEFT) {
-            for (unsigned int i = 0; i < CheckDist; i++) {
+            for (uint32_t i = 0; i < CheckDist; i++) {
                 newY = (currentPos.y + i) + (movement.y * 2);
-                if (!m_gameInstance->m_map->HasCollisionAtCoords(newX, newY)) {
+                if (!m_gameInstance->GetMap().HasCollisionAtCoords(newX, newY)) {
                     m_shape->setPosition(newX, newY);
                     return;
                 }
             }
-            for (unsigned int i = 0; i < CheckDist; i++) {
+            for (uint32_t i = 0; i < CheckDist; i++) {
                 newY = (currentPos.y - i) + (movement.y * 2);
-                if (!m_gameInstance->m_map->HasCollisionAtCoords(newX, newY)) {
+                if (!m_gameInstance->GetMap().HasCollisionAtCoords(newX, newY)) {
                     m_shape->setPosition(newX, newY);
                     return;
                 }
             }
         }else if (m_dir == DIRECTION::UP || m_dir == DIRECTION::DOWN) {
-            for (unsigned int i = 0; i < CheckDist; i++) {
+            for (uint32_t i = 0; i < CheckDist; i++) {
                 newX = (currentPos.x + i) + (movement.x * 2);
-                if (!m_gameInstance->m_map->HasCollisionAtCoords(newX, newY)) {
+                if (!m_gameInstance->GetMap().HasCollisionAtCoords(newX, newY)) {
                     m_shape->setPosition(newX, newY);
                     return;
                 }
             }
-            for (unsigned int i = 0; i < CheckDist; i++) {
+            for (uint32_t i = 0; i < CheckDist; i++) {
                 newX = (currentPos.x - i) + (movement.x * 2);
-                if (!m_gameInstance->m_map->HasCollisionAtCoords(newX, newY)) {
+                if (!m_gameInstance->GetMap().HasCollisionAtCoords(newX, newY)) {
                     m_shape->setPosition(newX, newY);
                     return;
                 }
@@ -140,9 +139,9 @@ void Pacman::UpdateAnim()
     m_deltaT.restart();
 }
 
-unsigned int Pacman::GetAnimByDirection(DIRECTION dir)
+uint32_t Pacman::GetAnimByDirection(DIRECTION dir)
 {
-    unsigned int anim = 0;
+    uint32_t anim = 0;
 
     switch (dir) {
         case RIGHT:
@@ -174,22 +173,25 @@ void Pacman::CheckInteraction()
     pacmanBounds.height -= 3.0;
     pacmanBounds.width -= 3.0;
 
-    Utils::InteractionHandler<Pellet>(pacmanBounds,m_gameInstance,&(m_gameInstance->m_map->m_Pellets));
-    Utils::InteractionHandler<Energizer>(pacmanBounds, m_gameInstance, &(m_gameInstance->m_map->m_Energizers));
+    Utils::InteractionHandler<Pellet>(pacmanBounds,m_gameInstance, &m_gameInstance->GetMap().GetPellets());
+    Utils::InteractionHandler<Energizer>(pacmanBounds, m_gameInstance, &m_gameInstance->GetMap().GetEnergizers());
 
-    for (int i = 0; i < m_gameInstance->m_ghosts.size(); i++) {
+    auto& ghosts = m_gameInstance->GetGhosts();
+    auto ghostsSize = ghosts.size();
+
+    for (uint32_t i = 0; i < ghostsSize; i++) {
         
-        auto ghostShape = m_gameInstance->m_ghosts[i]->Shape();
+        auto ghostShape = ghosts[i]->Shape();
         if (pacmanBounds.intersects(ghostShape->getGlobalBounds())) {
 
-            if (m_gameInstance->m_ghosts[i]->m_mode == GhostModes::FRIGHTENED) {
-                m_gameInstance->m_gameState.AddCurrentScore(KILLED_GHOST_POINTS_BONUS);
-                m_gameInstance->m_ghosts[i]->SetMode(GhostModes::GOHOME);
-                m_gameInstance->m_ghosts[i]->PlayDeadSound();
+            if (ghosts[i]->GetMode() == GhostModes::FRIGHTENED) {
+                m_gameInstance->GetGameState().AddCurrentScore(KILLED_GHOST_POINTS_BONUS);
+                ghosts[i]->SetMode(GhostModes::GOHOME);
+                ghosts[i]->PlayDeadSound();
             }
-            else if (m_gameInstance->m_ghosts[i]->m_mode != GhostModes::GOHOME) {
+            else if (ghosts[i]->GetMode() != GhostModes::GOHOME) {
                 PlayDeadSound();
-                m_gameInstance->m_gameState.SetGameFinishedWithExitStatus(GameExitedStatus::DIED);
+                m_gameInstance->GetGameState().SetGameFinishedWithExitStatus(GameExitedStatus::DIED);
             }
 
             return;
@@ -204,14 +206,14 @@ void Pacman::SetCanMove(bool canMove)
 
 void Pacman::PlayDeadSound()
 {
-    auto audioId = m_gameInstance->m_soundManager.GetAudioIdByName("PacmanDead");
-    m_gameInstance->m_soundManager.Play(audioId);
+    auto audioId = m_gameInstance->GetSoundManager().GetAudioIdByName("PacmanDead");
+    m_gameInstance->GetSoundManager().Play(audioId);
 }
 
 void Pacman::PlayFruitEatenSound()
 {
-    auto audioId = m_gameInstance->m_soundManager.GetAudioIdByName("PacmanEatFruit");
-    m_gameInstance->m_soundManager.Play(audioId);
+    auto audioId = m_gameInstance->GetSoundManager().GetAudioIdByName("PacmanEatFruit");
+    m_gameInstance->GetSoundManager().Play(audioId);
 }
 
 

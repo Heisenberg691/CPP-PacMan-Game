@@ -1,11 +1,11 @@
+// Copyright © Veselin Dafchev 2022 All Rights Reserved.
 #pragma once
-#ifndef GAMESAVEMANAGER_H
-#define GAMESAVEMANAGER_H
+
 #include "Globals.h"
 
 struct GameSave
 {
-	uint highScore = 0;
+	uint32_t highScore = 0;
 };
 
 class Game;
@@ -18,9 +18,7 @@ public:
 
 	void LoadGameSave();
 	void SaveGame();
-	Game* m_gameInstance;
+	
 private:
-
+	Game* m_gameInstance;
 };
-
-#endif

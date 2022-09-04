@@ -21,7 +21,7 @@ PathFinder::Node::Node(Vec2i coordinates_, Node* parent_)
     G = H = 0;
 }
 
-PathFinder::uint PathFinder::Node::getScore()
+PathFinder::uint32_t PathFinder::Node::getScore()
 {
     return G + H;
 }
@@ -96,14 +96,14 @@ PathFinder::CoordinateList PathFinder::Generator::findPath(Vec2i source_, Vec2i 
         closedSet.push_back(current);
         openSet.erase(current_it);
 
-        for (uint i = 0; i < directions; ++i) {
+        for (uint32_t i = 0; i < directions; ++i) {
             Vec2i newCoordinates(current->coordinates + direction[i]);
             if (detectCollision(newCoordinates) ||
                 findNodeOnList(closedSet, newCoordinates)) {
                 continue;
             }
 
-            uint totalCost = current->G + ((i < 4) ? 10 : 14);
+            uint32_t totalCost = current->G + ((i < 4) ? 10 : 14);
 
             Node* successor = findNodeOnList(openSet, newCoordinates);
             if (successor == nullptr) {
@@ -159,14 +159,14 @@ PathFinder::CoordinateList PathFinder::Generator::findPath(Vec2i source_, Vec2i 
         closedSet.push_back(current);
         openSet.erase(current_it);
 
-        for (uint i = 0; i < directions; ++i) {
+        for (uint32_t i = 0; i < directions; ++i) {
             Vec2i newCoordinates(current->coordinates + direction[i]);
             if (detectCollision(newCoordinates) || detectCollision(newCoordinates, addonCollisions) ||
                 findNodeOnList(closedSet, newCoordinates)) {
                 continue;
             }
 
-            uint totalCost = current->G + ((i < 4) ? 10 : 14);
+            uint32_t totalCost = current->G + ((i < 4) ? 10 : 14);
 
             Node* successor = findNodeOnList(openSet, newCoordinates);
             if (successor == nullptr) {
@@ -237,19 +237,19 @@ PathFinder::Vec2i PathFinder::Heuristic::getDelta(Vec2i source_, Vec2i target_)
     return{ abs(source_.x - target_.x),  abs(source_.y - target_.y) };
 }
 
-PathFinder::uint PathFinder::Heuristic::manhattan(Vec2i source_, Vec2i target_)
+PathFinder::uint32_t PathFinder::Heuristic::manhattan(Vec2i source_, Vec2i target_)
 {
     auto delta = std::move(getDelta(source_, target_));
-    return static_cast<uint>(10 * (delta.x + delta.y));
+    return static_cast<uint32_t>(10 * (delta.x + delta.y));
 }
 
-PathFinder::uint PathFinder::Heuristic::euclidean(Vec2i source_, Vec2i target_)
+PathFinder::uint32_t PathFinder::Heuristic::euclidean(Vec2i source_, Vec2i target_)
 {
     auto delta = std::move(getDelta(source_, target_));
-    return static_cast<uint>(10 * sqrt(pow(delta.x, 2) + pow(delta.y, 2)));
+    return static_cast<uint32_t>(10 * sqrt(pow(delta.x, 2) + pow(delta.y, 2)));
 }
 
-PathFinder::uint PathFinder::Heuristic::octagonal(Vec2i source_, Vec2i target_)
+PathFinder::uint32_t PathFinder::Heuristic::octagonal(Vec2i source_, Vec2i target_)
 {
     auto delta = std::move(getDelta(source_, target_));
     return 10 * (delta.x + delta.y) + (-6) * std::min(delta.x, delta.y);

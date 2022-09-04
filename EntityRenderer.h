@@ -1,5 +1,6 @@
-#ifndef ENTITYRENDERER_H
-#define ENTITYRENDERER_H
+// Copyright © Veselin Dafchev 2022 All Rights Reserved.
+#pragma once
+
 #include "Entity.h"
 #include <SFML/Graphics.hpp>
 #include <iostream>
@@ -19,5 +20,3 @@ private:
 	std::vector<Entity*> m_entities;
 	sf::RenderWindow* m_screen;
 };
-
-#endif

@@ -1,5 +1,3 @@
-#include "Map.h"
-#include "Utils.h"
 #include "Game.h"
 #include <string>
 
@@ -31,12 +29,12 @@ void Map::LoadFromFile(std::string path)
 	std::vector<std::string> sketch = GetSketchFromFile(path);
 	std::vector<CellData> newCell;
 
-	for (unsigned int a = 0; a < sketch.size(); a++)
+	for (uint32_t a = 0; a < sketch.size(); a++)
 	{
 		CellData newData;
 		newCell.push_back(newData);
 	}
-	for (unsigned int b = 0; b < sketch.size(); b++)
+	for (uint32_t b = 0; b < sketch.size(); b++)
 	{
 		m_MapData.mapCellData.push_back(newCell);
 	}
@@ -46,9 +44,9 @@ void Map::LoadFromFile(std::string path)
 	m_pathFinder->setHeuristic(PathFinder::Heuristic::euclidean);
 	m_pathFinder->setDiagonalMovement(false);
 
-	for (unsigned int a = 0; a < sketch.size(); a++)
+	for (uint32_t a = 0; a < sketch.size(); a++)
 	{
-		for (unsigned int b = 0; b < sketch.size(); b++)
+		for (uint32_t b = 0; b < sketch.size(); b++)
 		{
 			m_MapData.mapCellData[b][a].type = Cell::Empty;
 
@@ -144,19 +142,19 @@ void Map::GenerateShapes()
 
 	for (unsigned char i = 0; i < m_Walls.size(); i++)
 	{
-		m_GameInstance->m_entityRenderer.AddEntity(m_Walls[i]);
+		m_GameInstance->GetEntityRenderer().AddEntity(m_Walls[i]);
 	}
 	for (unsigned char i = 0; i < m_Doors.size(); i++)
 	{
-		m_GameInstance->m_entityRenderer.AddEntity(m_Doors[i]);
+		m_GameInstance->GetEntityRenderer().AddEntity(m_Doors[i]);
 	}
 	for (unsigned char i = 0; i < m_Pellets.size(); i++)
 	{
-		m_GameInstance->m_entityRenderer.AddEntity(m_Pellets[i]);
+		m_GameInstance->GetEntityRenderer().AddEntity(m_Pellets[i]);
 	}
 	for (unsigned char i = 0; i < m_Energizers.size(); i++)
 	{
-		m_GameInstance->m_entityRenderer.AddEntity(m_Energizers[i]);
+		m_GameInstance->GetEntityRenderer().AddEntity(m_Energizers[i]);
 	}
 }
 
@@ -171,11 +169,11 @@ void Map::Reset()
 {
 	for (unsigned char i = 0; i < m_Pellets.size(); i++)
 	{
-		m_GameInstance->m_entityRenderer.RemoveEntity(m_Pellets[i]);
+		m_GameInstance->GetEntityRenderer().RemoveEntity(m_Pellets[i]);
 	}
 	for (unsigned char i = 0; i < m_Energizers.size(); i++)
 	{
-		m_GameInstance->m_entityRenderer.RemoveEntity(m_Energizers[i]);
+		m_GameInstance->GetEntityRenderer().RemoveEntity(m_Energizers[i]);
 	}
 	m_Pellets.clear();
 	m_Energizers.clear();
@@ -190,11 +188,11 @@ void Map::Reset()
 	}
 	for (unsigned char i = 0; i < m_Pellets.size(); i++)
 	{
-		m_GameInstance->m_entityRenderer.AddEntity(m_Pellets[i]);
+		m_GameInstance->GetEntityRenderer().AddEntity(m_Pellets[i]);
 	}
 	for (unsigned char i = 0; i < m_Energizers.size(); i++)
 	{
-		m_GameInstance->m_entityRenderer.AddEntity(m_Energizers[i]);
+		m_GameInstance->GetEntityRenderer().AddEntity(m_Energizers[i]);
 	}
 }
 
@@ -395,5 +393,35 @@ void Map::CreateCellOnMapCoords(Cell cellType, int row, int col, bool createPath
 			m_Walls.push_back(wall);
 		}
 	}
+}
+
+std::vector<PathCell*>& Map::GetPathCells()
+{
+	return m_PathCells;
+}
+
+PathFinder::Generator& Map::GetPathFinder()
+{
+	return *m_pathFinder;
+}
+
+std::vector<Door*>& Map::GetDoors()
+{
+	return m_Doors;
+}
+
+std::vector<Wall*>& Map::GetWalls()
+{
+	return m_Walls;
+}
+
+std::vector<Pellet*>& Map::GetPellets()
+{
+	return m_Pellets;
+}
+
+std::vector<Energizer*>& Map::GetEnergizers()
+{
+	return m_Energizers;
 }
 

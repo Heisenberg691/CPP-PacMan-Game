@@ -1,5 +1,5 @@
-#ifndef TEXTUREMANAGER_H
-#define TEXTUREMANAGER_H
+
+#pragma once
 
 #include <SFML/Graphics.hpp>
 #include <string>
@@ -28,6 +28,3 @@ public:
 
     static sf::Texture* loadTexture(std::string name, std::string path);
 };
-
-#endif
-

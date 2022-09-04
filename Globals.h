@@ -1,3 +1,4 @@
+// Copyright © Veselin Dafchev 2022 All Rights Reserved.
 #pragma once
 
 constexpr unsigned char CELL_SIZE = 16;
@@ -15,8 +16,6 @@ constexpr int KILLED_GHOST_POINTS_BONUS = 200;
 #define GHOST_COLOR_PINK sf::Color(255, 182, 255)
 #define GHOST_COLOR_ORANGE sf::Color(255, 182, 85)
 #define MAP_OFFSET sf::Vector2f(0.0,50.0)
-
-using uint = unsigned int;
 
 struct Position
 {

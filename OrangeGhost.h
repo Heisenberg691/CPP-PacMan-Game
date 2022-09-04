@@ -1,6 +1,6 @@
+// Copyright © Veselin Dafchev 2022 All Rights Reserved.
 #pragma once
-#ifndef ORANGEGHOST_H
-#define ORANGEGHOST_H
+
 #include <SFML/Graphics.hpp>
 #include "Ghost.h"
 
@@ -13,8 +13,7 @@ public:
 
 	sf::Sprite* Shape();
 	void Behaviour();
+private:
 	GhostType ghostType = GhostType::Orange;
 
 };
-
-#endif

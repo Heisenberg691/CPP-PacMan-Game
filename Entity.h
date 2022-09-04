@@ -1,5 +1,5 @@
-#ifndef ENTITY_H
-#define ENTITY_H
+// Copyright © Veselin Dafchev 2022 All Rights Reserved.
+#pragma once
 #include <SFML/Graphics.hpp>
 
 class Entity {
@@ -13,4 +13,3 @@ private:
 	
 };
 
-#endif

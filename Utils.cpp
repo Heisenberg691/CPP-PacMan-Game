@@ -1,4 +1,5 @@
 #include "Utils.h"
+#include "Game.h"
 #include <random>
 
 bool Utils::AreShapesColliding(const sf::RectangleShape& a, const sf::RectangleShape& b)

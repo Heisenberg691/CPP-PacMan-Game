@@ -1,4 +1,3 @@
-#include "GameState.h"
 #include "Game.h"
 
 GameState::GameState()
@@ -21,7 +20,7 @@ void GameState::SetGameFinishedWithExitStatus(GameExitedStatus exitStatus)
 	m_state.isFinished = true;
 }
 
-void GameState::SetCurrentScore(uint score)
+void GameState::SetCurrentScore(uint32_t score)
 {
 	m_state.score = score;
 
@@ -31,13 +30,13 @@ void GameState::SetCurrentScore(uint score)
 	SyncScoreBoard();
 }
 
-void GameState::SetHighScore(uint score)
+void GameState::SetHighScore(uint32_t score)
 {
 	m_state.highScore = score;
 	SyncScoreBoard();
 }
 
-void GameState::AddCurrentScore(uint score)
+void GameState::AddCurrentScore(uint32_t score)
 {
 	m_state.score += score;
 
@@ -49,8 +48,13 @@ void GameState::AddCurrentScore(uint score)
 
 void GameState::SyncScoreBoard()
 {
-	m_gameInstance->m_scoreboard->SetCurrentScore(m_state.score);
-	m_gameInstance->m_scoreboard->SetHighScore(m_state.highScore);
-	m_gameInstance->m_gameSaveManager->SaveGame();
+	m_gameInstance->GetScoreboard().SetCurrentScore(m_state.score);
+	m_gameInstance->GetScoreboard().SetHighScore(m_state.highScore);
+	m_gameInstance->GetGameSaveManager().SaveGame();
+}
+
+State& GameState::GetState()
+{
+	return m_state;
 }
 

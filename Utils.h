@@ -1,7 +1,5 @@
-#ifndef UTILS_H
-#define UTILS_H
-#include <SFML/Graphics.hpp>
-#include "Globals.h"
+// Copyright © Veselin Dafchev 2022 All Rights Reserved.
+#pragma once
 #include "Game.h"
 
 namespace Utils {
@@ -24,20 +22,18 @@ namespace Utils {
 
 			if (pellet->Shape()->getGlobalBounds().intersects(pacmanBounds))
 			{
-				
+
 				if (dynamic_cast<Pellet*>(pellet)) {
-					gameInstance->m_gameState.AddCurrentScore(1);
+					gameInstance->GetGameState().AddCurrentScore(1);
 				}
 				else if (dynamic_cast<Energizer*>(pellet)) {
 					gameInstance->SetGhostsMode(GhostModes::FRIGHTENED);
 				}
-				gameInstance->m_entityRenderer.RemoveEntity(pellet);
+				gameInstance->GetEntityRenderer().RemoveEntity(pellet);
 				entityVector->erase(it);
 				break;
 			}
 		}
 	}
-
 };
 
-#endif

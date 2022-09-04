@@ -1,5 +1,5 @@
-#ifndef __ASTAR_HPP_8F637DB91972F6C878D41D63F7E7214F__
-#define __ASTAR_HPP_8F637DB91972F6C878D41D63F7E7214F__
+// Copyright © Veselin Dafchev 2022 All Rights Reserved.
+#pragma once
 
 #include <vector>
 #include <functional>
@@ -14,18 +14,18 @@ namespace PathFinder
         bool operator == (const Vec2i& coordinates_);
     };
 
-    using uint = unsigned int;
-    using HeuristicFunction = std::function<uint(Vec2i, Vec2i)>;
+    using uint32_t = uint32_t;
+    using HeuristicFunction = std::function<uint32_t(Vec2i, Vec2i)>;
     using CoordinateList = std::vector<Vec2i>;
 
     struct Node
     {
-        uint G, H;
+        uint32_t G, H;
         Vec2i coordinates;
         Node* parent;
 
         Node(Vec2i coord_, Node* parent_ = nullptr);
-        uint getScore();
+        uint32_t getScore();
     };
 
     using NodeSet = std::vector<Node*>;
@@ -52,7 +52,7 @@ namespace PathFinder
         HeuristicFunction heuristic;
         CoordinateList direction, walls;
         Vec2i worldSize;
-        uint directions;
+        uint32_t directions;
     };
 
     class Heuristic
@@ -60,10 +60,8 @@ namespace PathFinder
         static Vec2i getDelta(Vec2i source_, Vec2i target_);
 
     public:
-        static uint manhattan(Vec2i source_, Vec2i target_);
-        static uint euclidean(Vec2i source_, Vec2i target_);
-        static uint octagonal(Vec2i source_, Vec2i target_);
+        static uint32_t manhattan(Vec2i source_, Vec2i target_);
+        static uint32_t euclidean(Vec2i source_, Vec2i target_);
+        static uint32_t octagonal(Vec2i source_, Vec2i target_);
     };
 }
-
-#endif // __ASTAR_HPP_8F637DB91972F6C878D41D63F7E7214F__

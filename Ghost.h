@@ -1,6 +1,6 @@
+// Copyright © Veselin Dafchev 2022 All Rights Reserved.
 #pragma once
-#ifndef GHOST_H
-#define GHOST_H
+
 #include <SFML/Graphics.hpp>
 #include "Entity.h"
 #include "Globals.h"
@@ -19,7 +19,7 @@ public:
 	virtual void Behaviour();
 	void SetDirection(DIRECTION dir);
 	void SetPosition(sf::Vector2f pos);
-	unsigned int GetAnimByDirection(DIRECTION dir);
+	uint32_t GetAnimByDirection(DIRECTION dir);
 	void Update();
 	void SetMode(GhostModes mode);
 	void SetMoving(bool isMoving);
@@ -30,13 +30,7 @@ public:
 	void ScatterBehaviour();
 	void PlayDeadSound();
 	bool CanGotoOppositeDirection();
-	sf::Sprite* m_faceShape;
-	GhostModes m_mode;
-	GhostType m_ghostType;
-	sf::Vector2f m_targetLocation;
-	MapCoords m_targetMapLocation;
-	bool m_isOnFinalPathDestination;
-	MapCoords m_ghostMapLocation;
+	GhostModes GetMode();
 protected:
 	void UpdateMovement();
 	void UpdateAnim();
@@ -49,18 +43,23 @@ protected:
 	bool m_isDead;
 	bool m_isMoving;
 	bool m_isFlashing;
-	unsigned int m_animFrame;
-	unsigned int m_animFrameNum;
+	uint32_t m_animFrame;
+	uint32_t m_animFrameNum;
 	std::vector<DIRECTION> blockedDirs;
 	sf::Clock m_deltaT;
 	sf::Clock m_deltaTMode;
 	sf::Clock m_deltaTFlashing;
 	PathFinder::CoordinateList m_optimalPath;
-	uint m_currentPathIndex;
+	uint32_t m_currentPathIndex;
 	std::vector<Ghost*> m_debugGhostPathShapes;
 	std::string m_deadSound;
+	sf::Sprite* m_faceShape;//
+	GhostModes m_mode;
+	GhostType m_ghostType;
+	sf::Vector2f m_targetLocation;
+	MapCoords m_targetMapLocation;
+	bool m_isOnFinalPathDestination;
+	MapCoords m_ghostMapLocation;
 
 
 };
-
-#endif

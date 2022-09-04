@@ -1,6 +1,6 @@
+// Copyright © Veselin Dafchev 2022 All Rights Reserved.
 #pragma once
-#ifndef BLUEGHOST_H
-#define BLUEGHOST_H
+
 #include <SFML/Graphics.hpp>
 #include "Ghost.h"
 
@@ -15,4 +15,3 @@ public:
 
 };
 
-#endif

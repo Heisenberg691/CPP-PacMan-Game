@@ -1,11 +1,9 @@
-#include "Ghost.h"
+#include "Game.h"
 #include "Utils.h"
-#include "PinkGhost.h"
-#include "Pacman.h"
 
 Ghost::Ghost()
 {
-    m_dir = DIRECTION::UP();
+    m_dir = DIRECTION(0);
     m_gameInstance = nullptr;
     m_screen = nullptr;
     m_shape = nullptr;
@@ -62,14 +60,14 @@ void Ghost::SetPosition(sf::Vector2f pos)
     m_faceShape->setPosition(pos);
 }
 
-unsigned int Ghost::GetAnimByDirection(DIRECTION dir)
+uint32_t Ghost::GetAnimByDirection(DIRECTION dir)
 {
 
     if (m_mode == GhostModes::FRIGHTENED) {
         return 4;
     }
    
-        unsigned int anim = 0;
+        uint32_t anim = 0;
 
         switch (dir) {
         case RIGHT:
@@ -100,7 +98,7 @@ void Ghost::Update()
 void Ghost::UpdateMovement()
 {
  
-    m_ghostMapLocation = m_gameInstance->m_map->GetEntityMapCoords(this, true);
+    m_ghostMapLocation = m_gameInstance->GetMap().GetEntityMapCoords(this, true);
 
     if (m_optimalPath.size()<=0) {
  
@@ -120,12 +118,12 @@ void Ghost::UpdateMovement()
 
         if (m_ghostType == GhostType::Pink && m_mode==GhostModes::CHASE) {
            
-            MapCoords pacmanMapLocation = m_gameInstance->m_map->GetEntityMapCoords(m_gameInstance->m_player, true);
+            MapCoords pacmanMapLocation = m_gameInstance->GetMap().GetEntityMapCoords(&m_gameInstance->GetPlayer(), true);
             addonCollisions.push_back({ pacmanMapLocation.row,pacmanMapLocation.col});
-            m_optimalPath = m_gameInstance->m_map->m_pathFinder->findPath({ m_ghostMapLocation.row, m_ghostMapLocation.col }, { m_targetMapLocation.row, m_targetMapLocation.col }, addonCollisions);
+            m_optimalPath = m_gameInstance->GetMap().GetPathFinder().findPath({m_ghostMapLocation.row, m_ghostMapLocation.col}, {m_targetMapLocation.row, m_targetMapLocation.col}, addonCollisions);
         }
         else {
-            m_optimalPath = m_gameInstance->m_map->m_pathFinder->findPath({ m_ghostMapLocation.row, m_ghostMapLocation.col }, { m_targetMapLocation.row, m_targetMapLocation.col }, addonCollisions);
+            m_optimalPath = m_gameInstance->GetMap().GetPathFinder().findPath({m_ghostMapLocation.row, m_ghostMapLocation.col}, {m_targetMapLocation.row, m_targetMapLocation.col}, addonCollisions);
         }
 
         
@@ -163,17 +161,17 @@ void Ghost::UpdateMovement()
         m_isOnFinalPathDestination = true;
     }
 
-    if (!m_gameInstance->m_map->HasCollisionAtCoords(newX, newY)) {
+    if (!m_gameInstance->GetMap().HasCollisionAtCoords(newX, newY)) {
         float x = m_shape->getGlobalBounds().left;
         float y = m_shape->getGlobalBounds().top;
         if (x <= 0) {
-            newX = m_screen->getSize().x - 50;
+            newX = float(m_screen->getSize().x - 50);
         }
         else if (x >= m_screen->getSize().x) {
             newX = 10;
         }
         else if (y < 0) {
-            newY = m_screen->getSize().y - 50;
+            newY = float(m_screen->getSize().y - 50);
         }
         else if (y > m_screen->getSize().y) {
             newY = 10;
@@ -182,34 +180,34 @@ void Ghost::UpdateMovement()
     }
     else {
 
-        unsigned int CheckDist = 20;
+        uint32_t CheckDist = 20;
         if (m_dir == DIRECTION::RIGHT || m_dir == DIRECTION::LEFT) {
-            for (unsigned int i = 0; i < CheckDist; i++) {
+            for (uint32_t i = 0; i < CheckDist; i++) {
                 newY = (currentPos.y + i) + (movement.y * 2);
-                if (!m_gameInstance->m_map->HasCollisionAtCoords(newX, newY)) {
+                if (!m_gameInstance->GetMap().HasCollisionAtCoords(newX, newY)) {
                     SetPosition(sf::Vector2f(newX, newY));
                     return;
                 }
             }
-            for (unsigned int i = 0; i < CheckDist; i++) {
+            for (uint32_t i = 0; i < CheckDist; i++) {
                 newY = (currentPos.y - i) + (movement.y * 2);
-                if (!m_gameInstance->m_map->HasCollisionAtCoords(newX, newY)) {
+                if (!m_gameInstance->GetMap().HasCollisionAtCoords(newX, newY)) {
                     SetPosition(sf::Vector2f(newX, newY));
                     return;
                 }
             }
         }
         else if (m_dir == DIRECTION::UP || m_dir == DIRECTION::DOWN) {
-            for (unsigned int i = 0; i < CheckDist; i++) {
+            for (uint32_t i = 0; i < CheckDist; i++) {
                 newX = (currentPos.x + i) + (movement.x * 2);
-                if (!m_gameInstance->m_map->HasCollisionAtCoords(newX, newY)) {
+                if (!m_gameInstance->GetMap().HasCollisionAtCoords(newX, newY)) {
                     SetPosition(sf::Vector2f(newX, newY));
                     return;
                 }
             }
-            for (unsigned int i = 0; i < CheckDist; i++) {
+            for (uint32_t i = 0; i < CheckDist; i++) {
                 newX = (currentPos.x - i) + (movement.x * 2);
-                if (!m_gameInstance->m_map->HasCollisionAtCoords(newX, newY)) {
+                if (!m_gameInstance->GetMap().HasCollisionAtCoords(newX, newY)) {
                     SetPosition(sf::Vector2f(newX, newY));
                     return;
                 }
@@ -270,36 +268,36 @@ bool Ghost::CanGotoDirection(DIRECTION dir)
     float newY = currentPos.y + (movement.y * 2);
 
 
-    if (!m_gameInstance->m_map->HasCollisionAtCoords(newX, newY)) {
+    if (!m_gameInstance->GetMap().HasCollisionAtCoords(newX, newY)) {
         return true;
     }
     else {
 
-        unsigned int CheckDist = 20;
+        uint32_t CheckDist = 20;
         if (dir == DIRECTION::RIGHT || dir == DIRECTION::LEFT) {
-            for (unsigned int i = 0; i < CheckDist; i++) {
+            for (uint32_t i = 0; i < CheckDist; i++) {
                 newY = (currentPos.y + i) + (movement.y * 2);
-                if (!m_gameInstance->m_map->HasCollisionAtCoords(newX, newY)) {
+                if (!m_gameInstance->GetMap().HasCollisionAtCoords(newX, newY)) {
                     return true;
                 }
             }
-            for (unsigned int i = 0; i < CheckDist; i++) {
+            for (uint32_t i = 0; i < CheckDist; i++) {
                 newY = (currentPos.y - i) + (movement.y * 2);
-                if (!m_gameInstance->m_map->HasCollisionAtCoords(newX, newY)) {
+                if (!m_gameInstance->GetMap().HasCollisionAtCoords(newX, newY)) {
                     return true;
                 }
             }
         }
         else if (dir == DIRECTION::UP || dir == DIRECTION::DOWN) {
-            for (unsigned int i = 0; i < CheckDist; i++) {
+            for (uint32_t i = 0; i < CheckDist; i++) {
                 newX = (currentPos.x + i) + (movement.x * 2);
-                if (!m_gameInstance->m_map->HasCollisionAtCoords(newX, newY)) {
+                if (!m_gameInstance->GetMap().HasCollisionAtCoords(newX, newY)) {
                     return true;
                 }
             }
-            for (unsigned int i = 0; i < CheckDist; i++) {
+            for (uint32_t i = 0; i < CheckDist; i++) {
                 newX = (currentPos.x - i) + (movement.x * 2);
-                if (!m_gameInstance->m_map->HasCollisionAtCoords(newX, newY)) {
+                if (!m_gameInstance->GetMap().HasCollisionAtCoords(newX, newY)) {
                     return true;
                 }
             }
@@ -320,7 +318,7 @@ DIRECTION Ghost::GetOptimalTargetDirection()
         return m_dir;
     }
 
-    uint refreshPathIndex = 2;
+    uint32_t refreshPathIndex = 2;
     if (refreshPathIndex > m_optimalPath.size() - 1) {
         refreshPathIndex = m_optimalPath.size()-1;
     }
@@ -334,10 +332,10 @@ DIRECTION Ghost::GetOptimalTargetDirection()
         }
     }
    
-    auto mapData = m_gameInstance->m_map->GetMapData();
+    auto mapData = m_gameInstance->GetMap().GetMapData();
     sf::Vector2f ghostPos = m_shape->getPosition();
 
-    for (unsigned int i = 0; i < m_optimalPath.size(); i++)
+    for (uint32_t i = 0; i < m_optimalPath.size(); i++)
     {
       
             if (m_ghostMapLocation.row == m_optimalPath.at(i).x && m_ghostMapLocation.col == m_optimalPath.at(i).y)
@@ -447,7 +445,7 @@ void Ghost::SetMode(GhostModes mode)
             }
             m_targetMapLocation.row = m_optimalPath[0].x;
             m_targetMapLocation.col = m_optimalPath[0].y;
-            m_targetLocation = m_gameInstance->m_map->GetMapData().mapCellData[m_targetMapLocation.row][m_targetMapLocation.col].entity->Shape()->getPosition();
+            m_targetLocation = m_gameInstance->GetMap().GetMapData().mapCellData[m_targetMapLocation.row][m_targetMapLocation.col].entity->Shape()->getPosition();
             m_optimalPath.clear();
             m_currentPathIndex = 0;
             break;
@@ -486,7 +484,7 @@ void Ghost::CheckModesExpireTime()
             SetMode(GhostModes::CHASE);
             m_targetMapLocation.row = m_optimalPath[0].x;
             m_targetMapLocation.col = m_optimalPath[0].y;
-            m_targetLocation = m_gameInstance->m_map->GetMapData().mapCellData[m_targetMapLocation.row][m_targetMapLocation.col].entity->Shape()->getPosition();
+            m_targetLocation = m_gameInstance->GetMap().GetMapData().mapCellData[m_targetMapLocation.row][m_targetMapLocation.col].entity->Shape()->getPosition();
             m_optimalPath.clear();
             m_currentPathIndex = 0;
             m_deltaTMode.restart();
@@ -517,15 +515,15 @@ void Ghost::DoModeBehaviour(GhostModes mode)
 
 void Ghost::TaskGoToRandomLocation()
 {
-    auto paths = m_gameInstance->m_map->m_PathCells;
+    auto paths = m_gameInstance->GetMap().GetPathCells();
     int randomPathIndex = Utils::getRandomInt(0, paths.size() - 1);
     m_targetLocation = paths[randomPathIndex]->Shape()->getPosition();
-    m_targetMapLocation = m_gameInstance->m_map->GetEntityMapCoords(paths[randomPathIndex], true);
+    m_targetMapLocation = m_gameInstance->GetMap().GetEntityMapCoords(paths[randomPathIndex], true);
 }
 
 void Ghost::TaskGoToGhostHouse()
 {
-    auto mapdata = m_gameInstance->m_map->GetMapData();
+    auto mapdata = m_gameInstance->GetMap().GetMapData();
     m_targetLocation.x = mapdata.ghostSpawnPoints["Blue"].x;
     m_targetLocation.y = mapdata.ghostSpawnPoints["Blue"].y;
     m_targetMapLocation = mapdata.ghostGridSpawnPoints["Blue"];
@@ -591,19 +589,19 @@ void Ghost::ScatterBehaviour()
         }
     }
 
-    m_targetLocation = m_gameInstance->m_map->GetMapData().mapCellData[m_targetMapLocation.row][m_targetMapLocation.col].entity->Shape()->getPosition();
+    m_targetLocation = m_gameInstance->GetMap().GetMapData().mapCellData[m_targetMapLocation.row][m_targetMapLocation.col].entity->Shape()->getPosition();
  
 }
 
 void Ghost::PlayDeadSound()
 {
-    auto audioId = m_gameInstance->m_soundManager.GetAudioIdByName(m_deadSound);
-    m_gameInstance->m_soundManager.Play(audioId);
+    auto audioId = m_gameInstance->GetSoundManager().GetAudioIdByName(m_deadSound);
+    m_gameInstance->GetSoundManager().Play(audioId);
 }
 
 bool Ghost::CanGotoOppositeDirection()
 {
-    auto mapData = m_gameInstance->m_map->GetMapData();
+    auto mapData = m_gameInstance->GetMap().GetMapData();
     if (m_ghostMapLocation == mapData.ghostGridSpawnPoints["Blue"] || m_ghostMapLocation == mapData.ghostGridSpawnPoints["Pink"] ||
         m_ghostMapLocation == mapData.ghostGridSpawnPoints["Orange"])
     {
@@ -612,4 +610,9 @@ bool Ghost::CanGotoOppositeDirection()
 
     return false;
     
+}
+
+GhostModes Ghost::GetMode()
+{
+    return m_mode;
 }

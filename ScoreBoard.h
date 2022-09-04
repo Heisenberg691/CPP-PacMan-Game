@@ -1,5 +1,6 @@
-#ifndef SCOREBOARD_H
-#define SCOREBOARD_H
+// Copyright © Veselin Dafchev 2022 All Rights Reserved.
+#pragma once
+
 #include <SFML/Graphics.hpp>
 #include "Globals.h"
 
@@ -11,14 +12,12 @@ public:
 	~ScoreBoard();
 
 	void Draw();
-	void SetCurrentScore(uint score);
-	void SetHighScore(uint highScore);
+	void SetCurrentScore(uint32_t score);
+	void SetHighScore(uint32_t highScore);
+	
+private:
 	sf::Text m_currentScoreText;
 	sf::Text m_highScoreText;
 	sf::Font m_font;
 	Game* m_gameInstance;
-private:
-
 };
-
-#endif

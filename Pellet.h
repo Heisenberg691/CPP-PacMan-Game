@@ -1,5 +1,6 @@
-#ifndef PELLET_H
-#define PELLET_H
+// Copyright © Veselin Dafchev 2022 All Rights Reserved.
+#pragma once
+
 #include <SFML/Graphics.hpp>
 #include "Entity.h"
 #include "Globals.h"
@@ -15,5 +16,3 @@ public:
 private:
 	sf::Sprite* m_shape;
 };
-
-#endif

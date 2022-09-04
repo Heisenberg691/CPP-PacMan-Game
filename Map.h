@@ -1,6 +1,6 @@
+// Copyright © Veselin Dafchev 2022 All Rights Reserved.
 #pragma once
-#ifndef MAP_H
-#define MAP_H
+
 #include <vector>
 #include <fstream>
 #include <iostream>
@@ -43,18 +43,22 @@ public:
 	MapCoords GetEntityMapCoords(Entity* entity,bool checkEmptyCells);
 	MapCoords GetMapCoordsFromVector2(sf::Vector2f coords);
 	void CreateCellOnMapCoords(Cell cellType, int row, int col,bool createPathCell);
+	std::vector<PathCell*>& GetPathCells();
+	PathFinder::Generator& GetPathFinder();
+	std::vector<Door*>& GetDoors();
+	std::vector<Wall*>& GetWalls();
+	std::vector<Pellet*>& GetPellets();
+	std::vector<Energizer*>& GetEnergizers();
+private:
+	void GenerateShapes();
+	MapData m_MapData;
+	sf::Texture m_texture;
+	Game* m_GameInstance;
 	std::vector<Door*> m_Doors;
 	std::vector<Wall*> m_Walls;
 	std::vector<Pellet*> m_Pellets;
 	std::vector<Energizer*> m_Energizers;
 	std::vector<PathCell*> m_PathCells;
 	PathFinder::Generator* m_pathFinder;
-private:
-	void GenerateShapes();
-	MapData m_MapData;
-	sf::Texture m_texture;
-	Game* m_GameInstance;
 
 };
-
-#endif

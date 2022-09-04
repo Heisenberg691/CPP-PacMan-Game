@@ -1,6 +1,6 @@
+// Copyright © Veselin Dafchev 2022 All Rights Reserved.
 #pragma once
-#ifndef PINKGHOST_H
-#define PINKGHOST_H
+
 #include <SFML/Graphics.hpp>
 #include "Ghost.h"
 
@@ -12,8 +12,8 @@ public:
 	~PinkGhost();
 	sf::Sprite* Shape();
 	void Behaviour();
+private:
 	GhostType ghostType = GhostType::Pink;
 	MapCoords m_lastPacmanLocation;
 };
 
-#endif

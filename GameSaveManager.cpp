@@ -1,5 +1,4 @@
 #define _CRT_SECURE_NO_WARNINGS
-#include "GameSaveManager.h"
 #include "Game.h"
 #include <iostream>
 #include <fstream>
@@ -35,13 +34,13 @@ void GameSaveManager::LoadGameSave()
 	printf("%d\n", saveData.highScore);
 	fclose(fin);
 
-	m_gameInstance->m_gameState.SetHighScore(saveData.highScore);
+	m_gameInstance->GetGameState().SetHighScore(saveData.highScore);
 }
 
 void GameSaveManager::SaveGame()
 {
 	GameSave saveData;
-	saveData.highScore = m_gameInstance->m_gameState.m_state.highScore;
+	saveData.highScore = m_gameInstance->GetGameState().GetState().highScore;
 	FILE* fout = fopen("Resources/GameSaves/GameSave.pacman", "w");
 	fwrite(&saveData, sizeof(GameSave), 1, fout);
 	fclose(fout);

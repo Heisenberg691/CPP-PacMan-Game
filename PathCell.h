@@ -1,6 +1,6 @@
+// Copyright © Veselin Dafchev 2022 All Rights Reserved.
 #pragma once
-#ifndef PATHCELL_H
-#define PATHCELL_H
+
 #include <SFML/Graphics.hpp>
 #include "Entity.h"
 #include "Globals.h"
@@ -16,5 +16,3 @@ public:
 private:
 	sf::Sprite* m_shape;
 };
-
-#endif

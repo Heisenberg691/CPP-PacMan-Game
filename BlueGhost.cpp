@@ -1,12 +1,8 @@
-#include "BlueGhost.h"
 #include "Game.h"
-#include "Globals.h"
-#include "Pacman.h"
-#include "Utils.h"
 
 BlueGhost::BlueGhost(Game* gameInstance)
 {
-    m_dir = DIRECTION::UP();
+    m_dir = DIRECTION(0);
     m_animFrameNum = 6;
     sf::Texture texture;
     m_shape = new sf::Sprite();
@@ -17,8 +13,8 @@ BlueGhost::BlueGhost(Game* gameInstance)
     m_faceShape->setScale(newScale);
     m_isMoving = false;
     m_gameInstance = gameInstance;
-    m_faceShape->setTexture(*(m_gameInstance->m_texManager.getTexture("ghost")));
-    m_shape->setTexture(*(m_gameInstance->m_texManager.getTexture("ghost")));
+    m_faceShape->setTexture(*(m_gameInstance->GetTextureManager().getTexture("ghost")));
+    m_shape->setTexture(*(m_gameInstance->GetTextureManager().getTexture("ghost")));
     m_shape->setColor(GHOST_COLOR_BLUE);
     m_faceShape->setTextureRect(sf::IntRect(CELL_SIZE * 1,CELL_SIZE,CELL_SIZE,CELL_SIZE));
     m_ghostType = GhostType::Blue;

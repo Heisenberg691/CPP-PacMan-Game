@@ -1,14 +1,10 @@
-#include "OrangeGhost.h"
 #include "Game.h"
-#include "Globals.h"
-#include "Pacman.h"
-#include "Utils.h"
 #include <algorithm>
 #include <random>
 
 OrangeGhost::OrangeGhost(Game* gameInstance)
 {
-    m_dir = DIRECTION::UP();
+    m_dir = DIRECTION(0);
     m_animFrameNum = 6;
     sf::Texture texture;
     m_shape = new sf::Sprite();
@@ -19,8 +15,8 @@ OrangeGhost::OrangeGhost(Game* gameInstance)
     m_faceShape->setScale(newScale);
     m_isMoving = false;
     m_gameInstance = gameInstance;
-    m_faceShape->setTexture(*(m_gameInstance->m_texManager.getTexture("ghost")));
-    m_shape->setTexture(*(m_gameInstance->m_texManager.getTexture("ghost")));
+    m_faceShape->setTexture(*(m_gameInstance->GetTextureManager().getTexture("ghost")));
+    m_shape->setTexture(*(m_gameInstance->GetTextureManager().getTexture("ghost")));
     m_shape->setColor(GHOST_COLOR_ORANGE);
     m_faceShape->setTextureRect(sf::IntRect(CELL_SIZE * 1, CELL_SIZE, CELL_SIZE, CELL_SIZE));
     m_ghostType = GhostType::Orange;
@@ -47,9 +43,9 @@ void OrangeGhost::Behaviour()
         }
     }
 
-    MapCoords pacmanMapCoords = m_gameInstance->m_map->GetEntityMapCoords(m_gameInstance->m_player, true);
+    MapCoords pacmanMapCoords = m_gameInstance->GetMap().GetEntityMapCoords(&m_gameInstance->GetPlayer(), true);
     int offset = rand() % 14 + (-7);
-    auto mapCellData = m_gameInstance->m_map->GetMapData().mapCellData;
+    auto mapCellData = m_gameInstance->GetMap().GetMapData().mapCellData;
     Cell randomCellType = Cell::Wall;
 
     while (randomCellType == Cell::Wall) {
@@ -75,7 +71,7 @@ void OrangeGhost::Behaviour()
    
 
     m_targetLocation = mapCellData[pacmanMapCoords.row][pacmanMapCoords.col].entity->Shape()->getPosition();
-    m_targetMapLocation = m_gameInstance->m_map->GetEntityMapCoords(mapCellData[pacmanMapCoords.row][pacmanMapCoords.col].entity, true);
+    m_targetMapLocation = m_gameInstance->GetMap().GetEntityMapCoords(mapCellData[pacmanMapCoords.row][pacmanMapCoords.col].entity, true);
 
     m_deltaT.restart();
 }
